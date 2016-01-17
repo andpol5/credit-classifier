@@ -88,6 +88,9 @@ enc17.fit(uniqueItems(arr[:,16]))
 # 19 - Telephone (binary)
 # 20 - Foreign worker (binary)
 # 21 - Output: Good vs bad credit (binary)
+enc21 = preprocessing.OneHotEncoder() # 21 - output
+enc21.fit(uniqueItems(arr[:,20]))
+
 
 # Create columns of new data
 col1 = encodeColumn(arr[:,0], enc1)
@@ -110,7 +113,7 @@ col17 = encodeColumn(arr[:,16], enc17)
 col18 = preprocessing.scale(arr[:,17]) # numeric
 col19 = binarizeColumn(arr[:,18], 192) # binary
 col20 = binarizeColumn(arr[:,19], 201) # binary
-col21 = binarizeColumn(arr[:,20], 1)   # binary
+col21 = encodeColumn(arr[:,20], enc21)
 
 # the widths of the new columns
 w1 = newWidth(arr[:,0])
@@ -124,9 +127,10 @@ w12 = newWidth(arr[:,11])
 w14 = newWidth(arr[:,13])
 w15 = newWidth(arr[:,14])
 w17 = newWidth(arr[:,16])
+w21 = newWidth(arr[:,20])
 
 # Create a placeholder for new data
-newData = np.zeros((1000, w1+w3+w4+w6+w7+w9+w10+w12+w14+w15+w17+10))
+newData = np.zeros((1000, w1+w3+w4+w6+w7+w9+w10+w12+w14+w15+w17++w21+9))
 
 # populate the matrix with the new columns
 c = 0; # index of current column (relative to old data)
@@ -150,7 +154,7 @@ newData[:, c:c+w17]=col17.reshape((1000, w17)); c=c+w17                 # 17
 newData[:, c] = col18; c = c + 1                                        # 18
 newData[:, c] = col19; c = c + 1                                        # 19
 newData[:, c] = col20; c = c + 1                                        # 20
-newData[:, w1+w3+w4+w6+w7+w9+w10+w12+w14+w15+w17+9] = col21 # 21
+newData[:, c:c+w21] = col21.reshape(1000, w21)                        # 21
 
 # Save to csv file
 np.savetxt("newData.csv", newData, delimiter=",")

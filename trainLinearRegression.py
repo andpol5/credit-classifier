@@ -15,8 +15,6 @@ def random_batch(dataset, batch_size):
     y = sample[:,last_col_index:last_col_index+2]
     return (x, y)
 
-# TODO: change to a neural network
-
 # Constants
 learning_rate = 1e-4
 num_classes = 2
@@ -36,7 +34,6 @@ x = tf.placeholder(tf.float32, [None, x_width])
 W = tf.Variable(tf.zeros([x_width, num_classes]))
 b = tf.Variable(tf.zeros([num_classes]))
 
-# TODO: add higher penalty for misclassifying bad credit as good credit
 y = tf.nn.softmax(tf.matmul(x, W) + b)
 
 # Training
