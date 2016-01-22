@@ -1,5 +1,7 @@
 #! /usr/bin/python
-# Train a neural network to predict on the german credit data
+# www.github.com/andpol5/credit-classifier
+#########################################################
+# Train a linear regression  to predict on the german credit data
 import time
 import signal
 import sys
@@ -8,8 +10,9 @@ import tensorflow as tf
 import numpy as np
 from numpy import genfromtxt
 
-from sklearn.metrics import confusion_matrix
 from sklearn import preprocessing
+from sklearn.cross_validation import KFold
+from sklearn.metrics import confusion_matrix
 
 def random_batch(dataset, batch_size):
     sample = dataset[np.random.choice(dataset.shape[0], batch_size, replace=False),:]
@@ -19,9 +22,10 @@ def random_batch(dataset, batch_size):
     return (x, y)
 
 # Constants
-learning_rate = 1e-4
+learning_rate = 1e-3
 num_classes = 2
 batch_size = 100
+num_k_folds = 10
 
 false_neg_cost = 1.0
 false_pos_cost = 5.0
@@ -61,20 +65,43 @@ init = tf.initialize_all_variables()
 # Create session
 sess = tf.InteractiveSession()
 sess.run(init)
-for i in range(5000):
-  batch_xs, batch_ys = random_batch(dataset, batch_size)
-  sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys})
 
-correct_prediction = tf.equal(tf.argmax(y_,1), tf.argmax(y,1))
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+# Use 10-Fold cross validation to find the avg validation accuracy and
+# confusion matrix values
+kf = KFold(rows, n_folds=num_k_folds)
+fold_counter = 1
+val_accuracies = []
+val_conmats = []
 
-y_p = tf.argmax(y_,1)
-accuracyD, yP = sess.run([accuracy, y_p], feed_dict={x: dataset[:,0:59], y: dataset[:,59:61]})
-print("Accuracy: %f" % accuracyD)
+for train_indices, val_indices in kf:
+    # split the data into train and validation
+    train_dataset = dataset[train_indices,:]
+    val_dataset = dataset[train_indices,:]
 
-# Get the confusion matrix
-yT = np.argmax(dataset[:,59:61], axis=1)
-conmat = confusion_matrix(yT, yP)
+    for i in range(1000):
+      batch_xs, batch_ys = random_batch(train_dataset, batch_size)
+      sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys})
+
+    correct_prediction = tf.equal(tf.argmax(y_,1), tf.argmax(y,1))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+
+    y_p = tf.argmax(y_,1)
+    val_accuracy, yP = sess.run([accuracy, y_p], feed_dict={x: val_dataset[:,0:59], y: val_dataset[:,59:61]})
+    print("Fold #: %d, validation accuracy: %f" % (fold_counter, val_accuracy))
+
+    # Get the confusion matrix
+    yT = np.argmax(val_dataset[:,59:61], axis=1)
+    conmat = confusion_matrix(yT, yP)
+    print("Confusion matrix:")
+    print("Good | Bad Credit")
+    print conmat
+
+    val_accuracies.append(val_accuracy)
+    val_conmats.append(conmat)
+    fold_counter = fold_counter + 1
+
+print("\nAveraging the 10-fold results:")
+print("validation accuracy: %f" % (np.mean(val_accuracies)))
 print("Confusion matrix:")
 print("Good | Bad Credit")
-print conmat
+print (sum(val_conmats)).astype(float) / num_k_folds
