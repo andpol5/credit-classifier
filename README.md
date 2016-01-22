@@ -133,7 +133,7 @@ To use a fair comparison of the performance of the two networks I am using 10-Fo
 
 #### Linear model
 
-Average validation accuracy of 10 runs: 0.793333
+Average validation accuracy of 10 runs: 0.793333<br>
 Confusion matrix:
 
 |          |Good |   Bad  |
@@ -145,7 +145,7 @@ Confusion matrix:
 #### Neural network model
 Nearly perfect results from the neural network:
 
-Average validation accuracy of 10 runs: 0.976000
+Average validation accuracy of 10 runs: 0.976000<br>
 Confusion matrix:
 
 |          |Good |   Bad  |
