@@ -120,7 +120,7 @@ for train_indices, val_indices in kf:
     train_dataset = dataset[train_indices,:]
     val_dataset = dataset[train_indices,:]
 
-    for i in range(1000):
+    for i in range(3000):
       batch_xs, batch_ys = random_batch(train_dataset, batch_size)
       sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys, keep_prob: dropout})
 
