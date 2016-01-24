@@ -1,4 +1,6 @@
 #! /usr/bin/python
+# www.github.com/andpol5/credit-classifier
+#########################################################
 # This script prreprocceses the data from german.data.txt
 # and outputs the result into a new file
 

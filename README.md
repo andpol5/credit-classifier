@@ -114,12 +114,12 @@ Layer      +-----+
 |     |    +-----+
 +-----+    |     |
            |     |
- 100 n     +-----+
+ 59 n      +-----+
 
             124 n
 ```
 
-The neural network is built according to the above diagram. There are 100 neurons associated with the input variables, there is a hidden layer of 124 neurons and finally an output layer corresponding to the 2 classes (bad credit vs good credit). Each one of the neurons is connected with all neurons in the previous and next layers.
+The neural network is built according to the above diagram. There are 59 neurons associated with the input variables (one for each feature in the adjusted dataset), there is a hidden layer of 124 neurons and finally an output layer corresponding to the 2 classes (bad credit vs good credit). Each one of the neurons is connected with all neurons in the previous and next layers.
 
 The network is initialized with random weights from a Gaussian distribution with {μ = 0, σ = 0.1}, a learning rate of 10<sup>-4</sup> and 3000 epochs of training for each fold and is trained by minimizing the cost function described using an Adam Optimizer [1].
 
