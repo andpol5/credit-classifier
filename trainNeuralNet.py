@@ -65,12 +65,18 @@ b_fc2 = bias_variable([num_neurons])
 h_fc2 = tf.nn.relu(tf.matmul(h_fc1_drop, w_fc2) + b_fc2)
 h_fc2_drop = tf.nn.dropout(h_fc2, keep_prob)
 
+# Fully connected layer 3:
+w_fc3 = weight_variable([num_neurons, num_neurons])
+b_fc3 = bias_variable([num_neurons])
+h_fc3 = tf.nn.relu(tf.matmul(h_fc2_drop, w_fc3) + b_fc3)
+h_fc3_drop = tf.nn.dropout(h_fc3, keep_prob)
+
 # Readout layer
 w_fc_out = weight_variable([num_neurons, num_classes])
 b_fc_out = bias_variable([num_classes])
 
 # The softmax function will make probabilties of Good vs Bad score at the output
-y_ = tf.nn.softmax(tf.matmul(h_fc2_drop, w_fc_out) + b_fc_out)
+y_ = tf.nn.softmax(tf.matmul(h_fc3_drop, w_fc_out) + b_fc_out)
 y = tf.placeholder(tf.float32, [None, num_classes])
 
 # Training
@@ -90,23 +96,6 @@ init = tf.initialize_all_variables()
 # Create session
 sess = tf.InteractiveSession()
 sess.run(init)
-# for i in range(10000):
-#   batch_xs, batch_ys = random_batch(dataset, batch_size)
-#   sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys, keep_prob: dropout})
-#
-# correct_prediction = tf.equal(tf.argmax(y_,1), tf.argmax(y,1))
-# accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-#
-# y_p = tf.argmax(y_,1)
-# accuracyD, yP = sess.run([accuracy, y_p], feed_dict={x: dataset[:,0:59], y: dataset[:,59:61], keep_prob: 1.0})
-# print("Accuracy: %f" % accuracyD)
-#
-# # Get the confusion matrix
-# yT = np.argmax(dataset[:,59:61], axis=1)
-# conmat = confusion_matrix(yT, yP)
-# print("Confusion matrix:")
-# print("Good | Bad Credit")
-# print conmat
 
 # Use 10-Fold cross validation to find the avg validation accuracy and
 # confusion matrix values
@@ -143,7 +132,7 @@ for train_indices, val_indices in kf:
     fold_counter = fold_counter + 1
 
 print("\nAveraging the 10-fold results:")
-print("validation accuracy: %f" % (np.mean(val_accuracies)))
+print("Validation accuracy- mean: %f, stddev: %f" % (np.mean(val_accuracies), np.std(val_accuracies)))
 print("Confusion matrix:")
 print("Good | Bad Credit")
 print (sum(val_conmats)).astype(float) / num_k_folds

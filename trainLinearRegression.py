@@ -101,7 +101,7 @@ for train_indices, val_indices in kf:
     fold_counter = fold_counter + 1
 
 print("\nAveraging the 10-fold results:")
-print("validation accuracy: %f" % (np.mean(val_accuracies)))
+print("Validation accuracy- mean: %f, stddev: %f" % (np.mean(val_accuracies), np.std(val_accuracies)))
 print("Confusion matrix:")
 print("Good | Bad Credit")
 print (sum(val_conmats)).astype(float) / num_k_folds

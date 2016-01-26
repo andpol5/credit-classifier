@@ -6,7 +6,7 @@ This is a small tech demonstration of analyzing credit data from Hamburg Univers
 ## Requirements
 Python<br>
 TensorFlow<br>
-Scikit Learn <br>
+Scikit Learn
 
 ## The dataset
 The dataset consists of 1000 datatpoints each with 20 variables (dimensions) 7 are numerical and 13 are categorical. The categorical data is encoded according to terms which have meaning to the bankers such as current employment timeframe:
@@ -93,35 +93,35 @@ See code in trainLinearRegression.py
 ### Neural Network
 
 ```
-            Hidden
-Input       Layer
-Layer      +-----+
-           |     |
-+-----+    |     |
-|     +--> +-----+
-|     |    +-----+     Output
-+-----+    |     |     Layer
-+-----+    |     |    +-----+
-|     |    +-----+    |     |
-|     +--> +-----+ +> |     |
-+-----+    |     |    +-----+
-+-----+    |     |    +-----+
-|     |    +-----+    |     |
-|     +--> +-----+ +> |     |
-+-----+    |     |    +-----+
-+-----+    |     |
-|     +--> +-----+     2 neurons
-|     |    +-----+
-+-----+    |     |
-           |     |
- 59 n      +-----+
+            Hidden     Hidden
+Input       Layer1     Layer2
+Layer      +-----+    +-----+
+           |     |    |     |
++-----+    |     +--> |     |
+|     +--> +-----+    +-----+
+|     |    +-----+    +-----+     Output
++-----+    |     +--> |     |     Layer
++-----+    |     |    |     |    +-----+
+|     |    +-----+    +-----+    |     |
+|     +--> +-----+    +-----+ +> |     |
++-----+    |     |    |     |    +-----+
++-----+    |     +--> |     |    +-----+
+|     |    +-----+    +-----+    |     |
+|     +--> +-----+    +-----+ +> |     |
++-----+    |     |    |     |    +-----+
++-----+    |     +--> |     |
+|     +--> +-----+    +-----+     2 neurons
+|     |    +-----+    +-----+
++-----+    |     +--> |     |
+           |     |    |     |
+ 59 n      +-----+    +-----+
 
-            124 n
+            124 n      124 n
 ```
 
-The neural network is built according to the above diagram. There are 59 neurons associated with the input variables (one for each feature in the adjusted dataset), there is a hidden layer of 124 neurons and finally an output layer corresponding to the 2 classes (bad credit vs good credit). Each one of the neurons is connected with all neurons in the previous and next layers.
+The neural network is built according to the above diagram. There are 59 neurons associated with the input variables (one for each feature in the adjusted dataset), there are two hidden layers of 124 neurons each and finally an output layer corresponding to the 2 classes (bad credit vs good credit). Each one of the neurons is connected with all neurons in the previous and next layers.
 
-The network is initialized with random weights from a Gaussian distribution with {μ = 0, σ = 0.1}, a learning rate of 10<sup>-4</sup> and 3000 epochs of training for each fold and is trained by minimizing the cost function described using an Adam Optimizer [1].
+The network is initialized with random weights from a Gaussian distribution with {μ = 0, σ = 0.1}, a learning rate of 10<sup>-4</sup> and 3000 epochs of training for each fold and is trained by minimizing the cost function described using an Adam Optimizer [3].
 
 See code in trainNeuralNet.py
 
@@ -134,6 +134,7 @@ To use a fair comparison of the performance of the two networks I am using 10-Fo
 #### Linear model
 
 Average validation accuracy of 10 runs: 0.793333<br>
+Standard deviation: 0.010506<br>
 Confusion matrix:
 
 |          |Good |   Bad  |
@@ -145,21 +146,25 @@ Confusion matrix:
 #### Neural network model
 Nearly perfect results from the neural network:
 
-Average validation accuracy of 10 runs: 0.976000<br>
+Average validation accuracy of 10 runs: 0.970778<br>
+Standard deviation: 0.045872<br>
 Confusion matrix:
 
 |          |Good |   Bad  |
 |:--------:|:---:|:------:|
-| **Good** |623.4|   6.6  |
-|  **Bad** |15.0 | 255.0  |
+| **Good** |623.1|   6.9  |
+|  **Bad** |19.4 | 250.6  |
+
+The very small standard deviations included in the results signify that the results are repeatable with respect to the folds used in k-fold cross validation.
 
 ## Analysis 
 Neural networks, even a simple one as above can both obtain a greater overall accuracy and minimize the number of false positives  when compared to linear regressions. Neural nets can be easily improved by adding more layers. The only downside of neural nets is that it is harder to describe which features are considered important by neural nets as opposed to by a single weight vector in a linear regression.
 
 
 ## References 
-[1] Kingma, D., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.<br>
-[Link](http://arxiv.org/pdf/1412.6980v7.pdf)
+[1] Sola, J., & Sevilla, J. (1997). Importance of input data normalization for the application of neural networks to complex industrial problems. Nuclear Science, IEEE Transactions on, 44(3), 1464-1468.<br>
+[2] Duan, K., Keerthi, S. S., Chu, W., Shevade, S. K., & Poo, A. N. (2003). Multi-category classification by soft-max combination of binary classifiers. In Multiple Classifier Systems (pp. 125-134). Springer Berlin Heidelberg.<br>
+[3] Kingma, D., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.[Link](http://arxiv.org/pdf/1412.6980v7.pdf)<br>
 
 
 
