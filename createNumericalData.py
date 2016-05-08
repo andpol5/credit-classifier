@@ -132,7 +132,7 @@ w17 = newWidth(arr[:,16])
 w21 = newWidth(arr[:,20])
 
 # Create a placeholder for new data
-newData = np.zeros((1000, w1+w3+w4+w6+w7+w9+w10+w12+w14+w15+w17++w21+9))
+newData = np.zeros((1000, w1+w3+w4+w6+w7+w9+w10+w12+w14+w15+w17+w21+9))
 
 # populate the matrix with the new columns
 c = 0; # index of current column (relative to old data)
