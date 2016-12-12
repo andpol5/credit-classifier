@@ -107,7 +107,7 @@ val_conmats = []
 for train_indices, val_indices in kf:
     # split the data into train and validation
     train_dataset = dataset[train_indices,:]
-    val_dataset = dataset[train_indices,:]
+    val_dataset = dataset[val_indices,:]
 
     for i in range(3000):
       batch_xs, batch_ys = random_batch(train_dataset, batch_size)

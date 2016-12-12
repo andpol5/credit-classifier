@@ -133,27 +133,28 @@ To use a fair comparison of the performance of the two networks I am using 10-Fo
 
 #### Linear model
 
-Average validation accuracy of 10 runs: 0.793333<br>
-Standard deviation: 0.010506<br>
+Mean validation accuracy of 10 runs: 0.744<br>
+Standard deviation: 0.0484<br>
 Confusion matrix:
 
-|          |Good |   Bad  |
-|:--------:|:---:|:------:|
-| **Good** |558  |   72   |
-|  **Bad** |114  |  156   |
+|          | Good |  Bad |
+|:--------:|:----:|:----:|
+| **Good** |  60  |  10  |
+|  **Bad** |  16  |  14  |
 
 
 #### Neural network model
 Nearly perfect results from the neural network:
 
-Average validation accuracy of 10 runs: 0.970778<br>
-Standard deviation: 0.045872<br>
+Mean validation accuracy of 10 runs: 0.921<br>
+Standard deviation: 0.0820<br>
 Confusion matrix:
 
-|          |Good |   Bad  |
-|:--------:|:---:|:------:|
-| **Good** |623.1|   6.9  |
-|  **Bad** |19.4 | 250.6  |
+|          | Good |  Bad |
+|:--------:|:----:|:----:|
+| **Good** |  67  |   3  |
+|  **Bad** |   5  |  25  |
+
 
 The very small standard deviations included in the results signify that the results are repeatable with respect to the folds used in k-fold cross validation.
 
@@ -165,7 +166,4 @@ Neural networks, even a simple one as above can both obtain a greater overall ac
 [1] Sola, J., & Sevilla, J. (1997). Importance of input data normalization for the application of neural networks to complex industrial problems. Nuclear Science, IEEE Transactions on, 44(3), 1464-1468.<br>
 [2] Duan, K., Keerthi, S. S., Chu, W., Shevade, S. K., & Poo, A. N. (2003). Multi-category classification by soft-max combination of binary classifiers. In Multiple Classifier Systems (pp. 125-134). Springer Berlin Heidelberg.<br>
 [3] Kingma, D., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.[Link](http://arxiv.org/pdf/1412.6980v7.pdf)<br>
-
-
-
 
