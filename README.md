@@ -131,23 +131,23 @@ To use a fair comparison of the performance of the two networks I am using 10-Fo
 
 ## Results
 
-#### Linear model
+#### Linear regression model
 
-Mean validation accuracy of 10 runs: 0.744<br>
-Standard deviation: 0.0484<br>
+Mean validation precision of 10 runs: 0.703<br>
+Standard deviation: 0.0702<br>
 Confusion matrix:
 
 |          | Good |  Bad |
 |:--------:|:----:|:----:|
 | **Good** |  60  |  10  |
-|  **Bad** |  16  |  14  |
+|  **Bad** |  15  |  15  |
 
 
 #### Neural network model
-Nearly perfect results from the neural network:
+Much better results from the neural network:
 
-Mean validation accuracy of 10 runs: 0.921<br>
-Standard deviation: 0.0820<br>
+Mean validation precision of 10 runs: 0.903<br>
+Standard deviation: 0.124<br>
 Confusion matrix:
 
 |          | Good |  Bad |
@@ -155,6 +155,11 @@ Confusion matrix:
 | **Good** |  67  |   3  |
 |  **Bad** |   5  |  25  |
 
+#### Results Table
+|                             | Precision |   Recall  |  F-Score  |
+|:---------------------------:|:---------:|:---------:|:---------:|
+| **Linear regression model** |   0.703   |    0.678  |   0.683   |
+|   **Neural network model**  |   0.902   |    0.890  |   0.895   |
 
 The very small standard deviations included in the results signify that the results are repeatable with respect to the folds used in k-fold cross validation.
 

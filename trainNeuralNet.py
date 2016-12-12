@@ -11,6 +11,7 @@ from numpy import genfromtxt
 from sklearn import preprocessing
 from sklearn.cross_validation import KFold
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_recall_fscore_support
 
 def random_batch(dataset, batch_size):
     sample = dataset[np.random.choice(dataset.shape[0], batch_size, replace=False),:]
@@ -101,8 +102,10 @@ sess.run(init)
 # confusion matrix values
 kf = KFold(rows, n_folds=num_k_folds)
 fold_counter = 1
-val_accuracies = []
 val_conmats = []
+val_precisions = []
+val_recalls = []
+val_f_scores = []
 
 for train_indices, val_indices in kf:
     # split the data into train and validation
@@ -113,26 +116,38 @@ for train_indices, val_indices in kf:
       batch_xs, batch_ys = random_batch(train_dataset, batch_size)
       sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys, keep_prob: dropout})
 
-    correct_prediction = tf.equal(tf.argmax(y_,1), tf.argmax(y,1))
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+    # Get the ground truth values for this k-fold
+    yT = np.argmax(val_dataset[:, 59:61], axis=1)
 
+    # Evaluate the predicted values
     y_p = tf.argmax(y_,1)
-    val_accuracy, yP = sess.run([accuracy, y_p], feed_dict={x: val_dataset[:,0:59], y: val_dataset[:,59:61], keep_prob: 1.0})
-    print("Fold #: %d, validation accuracy: %f" % (fold_counter, val_accuracy))
+    yP = sess.run(y_p, feed_dict={
+         x: val_dataset[:, 0:59], y: val_dataset[:, 59:61], keep_prob: 1.0})
+    print("Fold #: %d, validation accuracy: " % (fold_counter))
 
-    # Get the confusion matrix
-    yT = np.argmax(val_dataset[:,59:61], axis=1)
+    # Metrics and confusion matrix
+    [precision, recall, f_score, _] = precision_recall_fscore_support(yT, yP, average='macro')
+    print("Validation k-fold #%d - precision: %f, recallL: %f, f-score: %f" % (
+           fold_counter, precision, recall, f_score))
     conmat = confusion_matrix(yT, yP)
     print("Confusion matrix:")
     print("Good | Bad Credit")
     print conmat
 
-    val_accuracies.append(val_accuracy)
+    val_precisions.append(precision)
+    val_recalls.append(recall)
+    val_f_scores.append(f_score)
     val_conmats.append(conmat)
     fold_counter = fold_counter + 1
 
 print("\nAveraging the 10-fold results:")
-print("Validation accuracy- mean: %f, stddev: %f" % (np.mean(val_accuracies), np.std(val_accuracies)))
+print("Validation precision - mean: %f, stddev: %f" % (
+       np.mean(val_precisions), np.std(val_precisions)))
+print("Validation recall - mean: %f, stddev: %f" % (
+       np.mean(val_recalls), np.std(val_recalls)))
+print("Validation f-score - mean: %f, stddev: %f" % (
+       np.mean(val_f_scores), np.std(val_f_scores)))
 print("Confusion matrix:")
 print("Good | Bad Credit")
 print (sum(val_conmats)).astype(float) / num_k_folds
+
